@@ -62,7 +62,6 @@ class VimeoClient(object):
         self.auth_instance = VimeoAuth(token) if token else None
 
         self.app_info = (key, secret)
-        self._requests_methods = dict()
 
         # Make sure we have enough info to be useful.
         try:
