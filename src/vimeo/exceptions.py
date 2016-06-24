@@ -4,6 +4,7 @@ Exception
  +-- VimeoException
       +-- ClientException
            +-- BadConfigurationException
+           +-- BadRequestException
            +-- HTTPMethodNotConfiguredException
            +-- HTTPMethodNotImplementedException
  """
@@ -15,7 +16,7 @@ from vimeo.logger import LoggerSingleton
 class VimeoException(Exception):
     error_text = None
 
-    def __init__(self, write_log):
+    def __init__(self, write_log=True):
         self.logger = LoggerSingleton()
         if write_log:
             self.logger.error(self.error_text)
@@ -44,6 +45,27 @@ class ClientException(VimeoException):
         if error_text:
             self.error_text = error_text
         super(ClientException, self).__init__()
+
+
+class BadRequestException(ClientException):
+    """
+    To import:
+        from vimeo import exceptions
+
+    To declare in a class add a class attribute:
+        BadRequestException = exceptions.BadRequestException
+
+    To raise:
+        raise self.BadRequestException()
+    """
+
+    def __init__(self, status_code, error_msg, url):
+        self.error_text = '{status_code}: {error_msg} - uri: {url}'.format(
+            status_code=status_code,
+            error_msg=error_msg['error'],
+            url=url
+        )
+        super(BadRequestException, self).__init__()
 
 
 class HTTPMethodNotConfiguredException(ClientException):

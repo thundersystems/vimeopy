@@ -7,6 +7,7 @@ from functools import wraps
 
 from vimeo import exceptions
 from vimeo.logger import LoggerSingleton
+from vimeo.mixins import VimeoClientMethodMixin
 
 # VIMEO-CLIENT CONFIGURATION FILE: the changes affect all instances, singleton and not singleton
 _initial_client_configuration = {
@@ -42,9 +43,9 @@ class VimeoAuth(requests.auth.AuthBase):
         return request
 
 
-class VimeoClient(object):
+class VimeoClient(VimeoClientMethodMixin):
 
-    # VIMEO LOGGER SINGLETON
+    # VIMEO LOGGER
     logger = None
 
     # VIMEO CONFIGURATION
