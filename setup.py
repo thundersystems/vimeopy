@@ -23,7 +23,7 @@ def read(*names, **kwargs):
 
 
 setup(
-    name='vimeo',
+    name='vimeopy',
     version='0.1.0',
     license='BSD',
     description='Package for python based on Vimeo API',
