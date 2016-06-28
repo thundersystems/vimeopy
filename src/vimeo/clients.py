@@ -11,9 +11,6 @@ from vimeo.mixins import VimeoClientMethodMixin
 
 # VIMEO-CLIENT CONFIGURATION FILE: the changes affect all instances, singleton and not singleton
 _initial_client_configuration = {
-    'VIMEO_END_POINTS': {
-        'LOGON_END_POINT': 'https://api.vimeo.com',
-    },
     'API_ROOT': 'https://api.vimeo.com',
     'HTTP_METHODS': {'head', 'get', 'post', 'put', 'patch', 'options', 'delete'},  # set
     'ACCEPT_HEADER': "application/vnd.vimeo.*;version=3.2",
