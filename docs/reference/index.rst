@@ -4,4 +4,5 @@ Reference
 .. toctree::
     :glob:
 
-    vimeo*
+    logger*
+    client_configuration*
