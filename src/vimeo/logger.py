@@ -3,6 +3,19 @@
 import logging
 
 
+class Logger(object):
+    """
+    Logger
+    """
+
+    _logger = None
+
+    def __new__(cls, logger=None):
+        logger_manager = LoggerManager(logger)
+        cls._logger = logger_manager.logger
+        return cls._logger
+
+
 class LoggerSingleton(object):
     """
     Singleton logger
@@ -31,8 +44,7 @@ class LoggerManager(object):
             self.set_default_logger()
         self.logger_enabled = logger_enabled
 
-    def set_default_logger(self, logger_enabled=True, log_level=logging.INFO):
-
+    def set_default_logger(self, logger_enabled=False, log_level=logging.INFO):
             logger = logging.getLogger('default_logger')
             logger.setLevel(log_level)
             console_handler = logging.StreamHandler()
@@ -41,7 +53,7 @@ class LoggerManager(object):
             logger.addHandler(console_handler)
 
             self.logger = logger
-            self.logger_enabled = logger_enabled
+            self.logger.disabled = not logger_enabled
 
     def enable(self):
         self.logger.propagate = True
