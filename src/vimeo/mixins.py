@@ -122,7 +122,7 @@ class VimeoClientMethodMixin(object):
         """
         uri = "/me/albums"
         data = dict(name=name, description=description, privacy=privacy, password=password, sort=sort)
-        return self.post_method(uri, valid_codes=[200], data=data)
+        return self.post_method(uri, valid_codes=[200, 201], data=data)
 
     def update_album(self, album_id, name=None, description=None, privacy=None, password=None, sort=None):
         """
@@ -160,7 +160,7 @@ class VimeoClientMethodMixin(object):
         return self.delete_method(uri, valid_codes=[200])
 
     # ---===   APPEARANCES   ===--- #
-    def read_appareance_videos(self, filter_dict=None):
+    def read_appearance_videos(self, filter_dict=None):
         """
         return all videos that a user appears in
         :return: response
@@ -280,7 +280,7 @@ class VimeoClientMethodMixin(object):
         check if a user follows another user.
         :return: response
         """
-        uri = "/me/following/{follow_user_id}".format(follow_user_id)
+        uri = "/me/following/{follow_user_id}".format(follow_user_id=follow_user_id)
         return self.get_method(uri, valid_codes=[200])
 
     def follow_user(self, follow_user_id):
@@ -417,7 +417,7 @@ class VimeoClientMethodMixin(object):
         return self.delete_method(uri, valid_codes=[200])
 
     # ---===   WATCHED VIDEO   ===--- #
-    def get_wached_videos(self):
+    def get_watched_videos(self):
         """
         return a list of watched videos
         :return: response
@@ -470,7 +470,7 @@ class VimeoClientMethodMixin(object):
 
     def get_preset_videos(self, preset_id):
         """
-        return a list of preset videos
+        Get videos that have the provided preset.
         :param preset_id
         :return: response
         """
@@ -478,13 +478,13 @@ class VimeoClientMethodMixin(object):
         return self.get_method(uri, valid_codes=[200])
 
     # ---===   VIDEOS   ===--- #
-    def get_videos(self, **filters):
+    def get_videos(self, filter_dict=None):
         """
         return a list of videos
         :return: response
         """
         uri = "/me/videos"
-        return self.get_method(uri, valid_codes=[200], **filters)
+        return self.get_method(uri, valid_codes=[200], filter_dict=filter_dict or dict())
 
     def get_video(self, video_id):
         """
@@ -492,7 +492,8 @@ class VimeoClientMethodMixin(object):
         :param video_id:
         :return: response
         """
-        uri = "/me/videos/{video_id}".format(video_id)
+        uri = "/me/videos/{video_id}".format(video_id=video_id)
+
         return self.get_method(uri, valid_codes=[200])
 
     def post_video(self, redirect_url, upload_url):
