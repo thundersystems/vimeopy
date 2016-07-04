@@ -1,12 +1,16 @@
 # coding: utf-8
 """
 Exception
- +-- VimeoException
-      +-- ClientException
-           +-- BadConfigurationException
-           +-- BadRequestException
-           +-- HTTPMethodNotConfiguredException
-           +-- HTTPMethodNotImplementedException
++-- VimeoException
+    +-- ClientException
+        +-- BadConfigurationException
+        +-- HTTPErrorException
+            +-- HTTPError400Exception
+            +-- HTTPError403Exception
+            +-- HTTPError404Exception
+            +-- UnexpectedHTTPErrorException
+        +-- HTTPMethodNotConfiguredException
+        +-- HTTPMethodNotImplementedException
  """
 
 from vimeo.logger import LoggerSingleton
@@ -19,7 +23,7 @@ class VimeoException(Exception):
     def __init__(self, write_log=True):
         self.logger = LoggerSingleton()
         if write_log:
-            self.logger.error(self.error_text)
+            self.write_log(self.error_text)
 
     def __str__(self):
         return repr(self.error_text)
@@ -27,8 +31,11 @@ class VimeoException(Exception):
     def __repr__(self):
         return repr(self.error_text)
 
+    def write_log(self, msg):
+        self.logger.error(msg)
 
-# CLIENT
+
+# CLIENT GENERIC
 class ClientException(VimeoException):
     """
     To import:
@@ -47,27 +54,25 @@ class ClientException(VimeoException):
         super(ClientException, self).__init__()
 
 
-class BadRequestException(ClientException):
+# CLIENT BASE
+class BadConfigurationException(ClientException):
     """
     To import:
         from vimeo import exceptions
 
     To declare in a class add a class attribute:
-        BadRequestException = exceptions.BadRequestException
+        BadConfigurationException = exceptions.BadConfigurationException
 
     To raise:
-        raise self.BadRequestException()
+        raise self.BadConfigurationException()
     """
 
-    def __init__(self, status_code, error_msg, url):
-        self.error_text = '{status_code}: {error_msg} - uri: {url}'.format(
-            status_code=status_code,
-            error_msg=error_msg['error'],
-            url=url
-        )
-        super(BadRequestException, self).__init__()
+    def __init__(self):
+        self.error_text = '"token" or ("key", "secret") not initialized'
+        super(BadConfigurationException, self).__init__()
 
 
+# CLIENT HTTP
 class HTTPMethodNotConfiguredException(ClientException):
     """
     To import:
@@ -107,20 +112,79 @@ class HTTPMethodNotImplementedException(ClientException):
         super(HTTPMethodNotImplementedException, self).__init__()
 
 
-class BadConfigurationException(ClientException):
+class HTTPErrorException(ClientException):
     """
     To import:
         from vimeo import exceptions
 
     To declare in a class add a class attribute:
-        BadConfigurationException = exceptions.BadConfigurationException
+        HTTPErrorException = exceptions.HTTPErrorException
 
     To raise:
-        raise self.BadConfigurationException()
+        raise self.HTTPErrorException()
     """
+    def __init__(self, response):
+        self.response = response
+        self.error_text = 'HTTP ERROR: {status_code} - DESCRIPTION: {error_msg} - URI: {url}'.format(
+            status_code=self.response.status_code,
+            error_msg=self.response.json()['error'],
+            url=self.response.url
+        )
+        super(HTTPErrorException, self).__init__()
 
-    def __init__(self):
-        self.error_text = '"token" or ("key", "secret") not initialized'
-        super(BadConfigurationException, self).__init__()
 
+class HTTPError400Exception(HTTPErrorException):
+    """
+    To import:
+        from vimeo import exceptions
+
+    To declare in a class add a class attribute:
+        HTTPError400Exception = exceptions.HTTPError400Exception
+
+    To raise:
+        raise self.HTTPError400Exception()
+    """
+    pass
+
+
+class HTTPError403Exception(HTTPErrorException):
+    """
+    To import:
+        from vimeo import exceptions
+
+    To declare in a class add a class attribute:
+        HTTPError403Exception = exceptions.HTTPError403Exception
+
+    To raise:
+        raise self.HTTPError403Exception()
+    """
+    pass
+
+
+class HTTPError404Exception(HTTPErrorException):
+    """
+    To import:
+        from vimeo import exceptions
+
+    To declare in a class add a class attribute:
+        HTTPError404Exception = exceptions.HTTPError404Exception
+
+    To raise:
+        raise self.HTTPError404Exception()
+    """
+    pass
+
+
+class UnexpectedHTTPErrorException(HTTPErrorException):
+    """
+    To import:
+        from vimeo import exceptions
+
+    To declare in a class add a class attribute:
+        UnexpectedHTTPErrorException = exceptions.UnexpectedHTTPErrorException
+
+    To raise:
+        raise self.UnexpectedHTTPErrorException()
+    """
+    pass
 
