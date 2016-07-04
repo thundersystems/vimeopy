@@ -62,7 +62,7 @@ Singleton logger
 While your logger is the default or custom, if you want that all loggers have a uniform behavior a singleton logger
 is recommended::
 
-    from mailup.logger import LoggerSingleton
+    from vimeo.logger import LoggerSingleton
     singleton_logger = LoggerSingleton(logger)
-    mailup_client.logger = singleton_logger
+    vimeo_client.logger = singleton_logger
 
