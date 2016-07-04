@@ -1,6 +1,7 @@
 # coding: utf-8
 
 import json
+import logging
 import requests
 
 from functools import wraps
@@ -48,11 +49,12 @@ class VimeoClient(VimeoClientMethodMixin):
     # VIMEO CONFIGURATION
     configuration_dict = _initial_client_configuration
 
-    def __init__(self, token=None, key=None, secret=None, logger_enabled=False):
+    def __init__(self, token=None, key=None, secret=None, logger_enabled=False, logger_level=logging.INFO):
         # Init Logger
-        self.logger = LoggerSingleton()
-        if not logger_enabled:
-            self.logger.disabled = True
+        self.logger = LoggerSingleton(
+            enabled=logger_enabled,
+            level=logger_level,
+        )
 
         self.token = token
 

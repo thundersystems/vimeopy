@@ -23,9 +23,9 @@ class LoggerSingleton(object):
 
     _logger = None
 
-    def __new__(cls, logger=None):
+    def __new__(cls, logger=None, **kwargs):
         if not cls._logger:
-            logger_manager = LoggerManager(logger)
+            logger_manager = LoggerManager(logger, **kwargs)
             cls._logger = logger_manager.logger
             return cls._logger
         else:
@@ -35,30 +35,21 @@ class LoggerSingleton(object):
 
 class LoggerManager(object):
     logger = None
-    enabled = True
 
-    def __init__(self, logger=None, logger_enabled=True):
+    def __init__(self, logger=None, enabled=False, level=logging.INFO):
+        # build logger
         if logger:
             self.logger = logger
-        elif not self.logger:
-            self.set_default_logger()
-        self.logger_enabled = logger_enabled
+        else:
+            self.set_default_logger(enabled=enabled, level=level)
 
-    def set_default_logger(self, logger_enabled=False, log_level=logging.INFO):
+    def set_default_logger(self, enabled=False, level=logging.INFO):
             logger = logging.getLogger('default_logger')
-            logger.setLevel(log_level)
+            logger.setLevel(level)
             console_handler = logging.StreamHandler()
             formatter = logging.Formatter('%(asctime)s [%(levelname)s]: %(message)s')
             console_handler.setFormatter(formatter)
             logger.addHandler(console_handler)
 
             self.logger = logger
-            self.logger.disabled = not logger_enabled
-
-    def enable(self):
-        self.logger.propagate = True
-        self.enabled = True
-
-    def disable(self):
-        self.logger.propagate = False
-        self.enabled = False
+            self.logger.disabled = not enabled
