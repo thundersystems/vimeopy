@@ -49,8 +49,10 @@ class VimeoClient(VimeoClientMethodMixin):
     # VIMEO CONFIGURATION
     configuration_dict = _initial_client_configuration
 
-    def __init__(self, token=None, key=None, secret=None, logger_enabled=False, logger_level=logging.INFO):
+    def __init__(self, token=None, key=None, secret=None, **kwargs):
         # Init Logger
+        logger_enabled = kwargs.get('logger_enabled', False)
+        logger_level = kwargs.get('logger_level', logging.INFO)
         self.logger = LoggerSingleton(
             enabled=logger_enabled,
             level=logger_level,
@@ -116,9 +118,9 @@ class VimeoClientSingleton(object):
 
     _client = None
 
-    def __new__(cls, token=None, key=None, secret=None, logger_enabled=False):
+    def __new__(cls, token=None, key=None, secret=None, **kwargs):
         if not cls._client:
-            cls._client = VimeoClient(token=token, key=key, secret=secret, logger_enabled=logger_enabled)
+            cls._client = VimeoClient(token=token, key=key, secret=secret, **kwargs)
             return cls._client
         else:
             return cls._client
