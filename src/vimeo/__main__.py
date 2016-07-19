@@ -47,7 +47,7 @@ class TestReadUser(TestVimeopyBase):
         try:
             self.client.read_user()
         except Exception as e:
-            LOGGER_SINGLETON.error(e.error_text)
+            LOGGER_SINGLETON.error(getattr(e, 'error_text'))
         return True
 
 
