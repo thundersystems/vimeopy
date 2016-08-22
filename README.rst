@@ -9,4 +9,4 @@ Vimeo platform.
 License
 =======
 
-* Free software: BSD license
+* Free software: MIT license
